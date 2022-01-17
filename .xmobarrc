@@ -1,0 +1,22 @@
+Config { font = "-*-Fixed-Bold-R-Normal-*-13-*-*-*-*-*-*-*"
+        , borderColor = "black"
+        , border = TopB
+        , bgColor = "black"
+        , fgColor = "grey"
+        , position = TopW L 100
+        , commands = [  Run Date "%a %b %_d %Y %H:%M" "date" 60
+                        , Run StdinReader
+                        , Run Kbd []
+                        , Run Battery ["-t", "Bat: <left>% <acstatus>",
+                                       "-L", "15", "-H", "80",
+                                       "-l", "red", "-n", "orange", "-h", "green",
+                                       "--", "-O", "<fc=green>Вкл.</fc>", "-i", "<fc=green>Вкл.</fc>", "-o", "<fc=red>Выкл</fc>"
+                                       -- "-a", "notify-send -u critical 'Батарея садится!'"
+                                       ] 600
+                        --, Run Alsa "default" "Master" [] 10
+                        , Run Wireless "wlp0s20f3" [] 10 -- кастомизировать
+                        ]
+        , sepChar = "%"
+        , alignSep = "}{"
+        , template = "%StdinReader% }{ <fc=#ee9a00>%date%</fc> | %battery% | %kbd% | %wlp0s20f3wi%"
+        }
