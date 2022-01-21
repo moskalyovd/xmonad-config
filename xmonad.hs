@@ -1,6 +1,7 @@
 import System.IO
 import XMonad
 import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.DynamicBars as Bars
 import XMonad.Hooks.ManageDocks
 import XMonad.Layout.LayoutHints
 import XMonad.Layout.NoBorders
@@ -8,10 +9,29 @@ import XMonad.Util.EZConfig
 import XMonad.Util.Run
 import XMonad.Hooks.ManageHelpers
 import qualified XMonad.StackSet as W
+import XMonad.Actions.OnScreen
+import XMonad.Util.SpawnOnce
+import XMonad.Util.WorkspaceCompare
+
+myStartupHook :: X()
+myStartupHook = do
+    Bars.dynStatusBarStartup xmobarCreator xmobarDestroyer
+    spawnOnce "autorandr default"
+    spawnOnce "yandex-disk start"
+    spawnOnce "stalonetray"
+
+xmobarCreator :: Bars.DynamicStatusBar
+xmobarCreator (S sid) = spawnPipe $ "xmobar -x " ++ show sid
+
+xmobarDestroyer :: Bars.DynamicStatusBarCleanup
+xmobarDestroyer = return ()
+
+xmobarPP' = xmobarPP {
+  ppSort = mkWsSort $ getXineramaPhysicalWsCompare def
+}
+  where dropIx wsId = if ':' `elem` wsId then drop 2 wsId else wsId
 
 main = do
-    xmproc <- spawnPipe "xmobar"
-
     xmonad $ docks defaultConfig
         { workspaces = myWorkspaces
         , modMask = mod4Mask     -- Rebind Mod to the Windows key
@@ -20,10 +40,12 @@ main = do
         , focusedBorderColor  = "orange"
         , layoutHook = avoidStruts  $  layoutHook defaultConfig
         , manageHook = manageDocks <+> myManageHook
-        , logHook = dynamicLogWithPP xmobarPP
-                        { ppOutput = hPutStrLn xmproc
-                        , ppTitle = xmobarColor "green" "" . shorten 50
-                        }
+        , startupHook = myStartupHook
+        -- , logHook = dynamicLogWithPP xmobarPP
+        --                 { ppOutput = hPutStrLn xmproc
+        --                 , ppTitle = xmobarColor "green" "" . shorten 50
+        --                 }
+        , logHook     = Bars.multiPP xmobarPP' xmobarPP'
         } `additionalKeysP`
         [
         ]
