@@ -31,7 +31,7 @@ main = do
 data ExpandEdges a = ExpandEdges Int deriving (Read,Show)
 
 myWorkspaces :: [String]
-myWorkspaces = ["1:web","2:dev","3:term","4:debug","5:social","6","7","8","9"]
+myWorkspaces = ["1:web","2:dev","3:term","4:debug","5:social","6:other","7:vpn"]
 
 myManageHook = composeAll
     [className =? "stalonetray"    --> doIgnore
