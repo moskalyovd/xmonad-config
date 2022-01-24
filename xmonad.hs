@@ -35,6 +35,7 @@ main = do
     xmonad $ docks defaultConfig
         { workspaces = myWorkspaces
         , modMask = mod4Mask     -- Rebind Mod to the Windows key
+        , focusFollowsMouse = True
         , borderWidth           = 2
         , normalBorderColor  = "black"
         , focusedBorderColor  = "orange"
