@@ -16,7 +16,7 @@ import XMonad.Util.WorkspaceCompare
 myStartupHook :: X()
 myStartupHook = do
     Bars.dynStatusBarStartup xmobarCreator xmobarDestroyer
-    spawnOnce "autorandr default"
+    -- spawnOnce "autorandr default"
     spawnOnce "yandex-disk start"
     spawnOnce "stalonetray"
 
@@ -47,9 +47,14 @@ main = do
         --                 , ppTitle = xmobarColor "green" "" . shorten 50
         --                 }
         , logHook     = Bars.multiPP xmobarPP' xmobarPP'
-        } `additionalKeysP`
-        [
-        ]
+        } `additionalKeys` myKeys
+
+-- TODO: Нужно будет выбирать текущее активное устройство и с ним работать pactl list sinks
+-- pactl list short | grep RUNNING | sed -e 's,^\([0-9][0-9]*\)[^0-9].*,\1,'
+myKeys = [
+      ((0 , 0x1008FF11), spawn "pactl set-sink-volume 1 -2%"),
+      ((0 , 0x1008FF13), spawn "pactl set-sink-volume 1 +2%"),
+      ((0 , 0x1008FF12), spawn "pactl set-sink-mute 1 toggle")]
 
 data ExpandEdges a = ExpandEdges Int deriving (Read,Show)
 

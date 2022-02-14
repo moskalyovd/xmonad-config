@@ -4,6 +4,7 @@ Config { font = "-*-Fixed-Bold-R-Normal-*-13-*-*-*-*-*-*-*"
         , bgColor = "black"
         , fgColor = "grey"
         , position = TopW L 100
+        , allDesktops = True
         , commands = [  Run Date "%a %b %_d %Y %H:%M" "date" 60
                         , Run StdinReader
                         , Run Kbd []
